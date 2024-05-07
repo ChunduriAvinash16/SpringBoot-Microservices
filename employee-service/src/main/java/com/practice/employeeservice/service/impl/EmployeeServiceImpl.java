@@ -5,6 +5,7 @@ import com.practice.employeeservice.entity.Employee;
 import com.practice.employeeservice.repository.EmployeeRepository;
 import com.practice.employeeservice.service.EmployeeService;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -14,21 +15,20 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	EmployeeRepository employeeRepository;
 
+	ModelMapper modelMapper;
+
 	@Override
 	public EmployeeDto saveEmployee(EmployeeDto employeeDto) {
-		Employee employee = new Employee();
-		BeanUtils.copyProperties(employeeDto,employee);
+		Employee employee = modelMapper.map(employeeDto,Employee.class);
 		Employee saveEmployee = employeeRepository.save(employee);
-		EmployeeDto savedEmployeeDto = new EmployeeDto();
-		BeanUtils.copyProperties(saveEmployee, savedEmployeeDto);
+		EmployeeDto savedEmployeeDto = modelMapper.map(saveEmployee,EmployeeDto.class);
 		return  savedEmployeeDto;
 	}
 
 	@Override
 	public EmployeeDto getEmployeeById(Long employeeId) {
 		Employee employee = employeeRepository.findById(employeeId).get();
-		EmployeeDto employeeDto = new EmployeeDto();
-		BeanUtils.copyProperties(employee, employeeDto);
+		EmployeeDto employeeDto = modelMapper.map(employee,EmployeeDto.class);
 		return employeeDto;
 	}
 }

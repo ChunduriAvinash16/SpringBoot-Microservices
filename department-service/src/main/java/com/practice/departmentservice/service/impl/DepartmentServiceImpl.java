@@ -5,6 +5,7 @@ import com.practice.departmentservice.entity.Department;
 import com.practice.departmentservice.repository.DepartmentRepository;
 import com.practice.departmentservice.service.DeparmentService;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -14,14 +15,14 @@ public class DepartmentServiceImpl implements DeparmentService {
 
 	private DepartmentRepository departmentRepository;
 
+	private ModelMapper modelMapper;
+
 	@Override
 	public DepartmentDto saveDepartment(DepartmentDto deparmentDto) {
 		//Converting DeparmentDto to Department JPA Entity
-		Department department = new Department();
-		BeanUtils.copyProperties(deparmentDto, department);
+		Department department = modelMapper.map(deparmentDto,Department.class);
 		Department savedDepartment =  departmentRepository.save(department);
-		DepartmentDto savedDepartmentDto = new DepartmentDto();
-		BeanUtils.copyProperties(savedDepartment, savedDepartmentDto);
+		DepartmentDto savedDepartmentDto = modelMapper.map(savedDepartment, DepartmentDto.class);
 		return savedDepartmentDto;
 	}
 
@@ -29,8 +30,7 @@ public class DepartmentServiceImpl implements DeparmentService {
 	public DepartmentDto getDeparmentByCode(String departmentCode) {
 
 		Department department = departmentRepository.findByDepartmentCode(departmentCode);
-		DepartmentDto departmentDto = new DepartmentDto();
-		BeanUtils.copyProperties(department, departmentDto);
+		DepartmentDto departmentDto = modelMapper.map(department, DepartmentDto.class);
 		return departmentDto;
 	}
 }
