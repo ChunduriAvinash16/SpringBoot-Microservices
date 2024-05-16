@@ -1,0 +1,29 @@
+server:
+port : 8084
+spring:
+  application:
+    name: api-gateway
+#Routes for employee service
+  cloud:
+    gateway:
+#      discovery:
+#        locator:
+#          lower-case-service-id: true #convertes all the uppercase to lowercase
+#          enabled: true
+        routes:
+        - id : EMPLOYEE-SERVICE
+          uri: lb://EMPLOYEE-SERVICE
+            #lb is the loabbalance
+          predicates:
+          - >
+            Path=
+            /api/employees/**
+        - id: department-service
+          uri: lb://department-service
+          predicates:
+          - >
+            Path=
+            /api/departments/**
+logging:
+  level:
+    org.springframework.cloud: DEBUG

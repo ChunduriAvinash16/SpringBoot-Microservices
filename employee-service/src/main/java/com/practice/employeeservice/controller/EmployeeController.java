@@ -1,6 +1,7 @@
 package com.practice.employeeservice.controller;
 
 import com.practice.employeeservice.dto.EmployeeDto;
+import com.practice.employeeservice.dto.EmployeeResponse;
 import com.practice.employeeservice.service.EmployeeService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("api/employees")
+@RequestMapping("/api/employees")
 public class EmployeeController {
 
 	EmployeeService employeeService;
@@ -26,9 +27,9 @@ public class EmployeeController {
 	}
 
 	@GetMapping("{id}")
-	public ResponseEntity<EmployeeDto> getEmployeeById(
+	public ResponseEntity<EmployeeResponse> getEmployeeById(
 			@PathVariable("id") Long employeeId) {
-		EmployeeDto employeeDto = employeeService.getEmployeeById(employeeId);
-		return new ResponseEntity<>(employeeDto,HttpStatus.OK);
+		EmployeeResponse EmployeeResponse = employeeService.getEmployeeById(employeeId);
+		return new ResponseEntity<>(EmployeeResponse,HttpStatus.OK);
 	}
 }
