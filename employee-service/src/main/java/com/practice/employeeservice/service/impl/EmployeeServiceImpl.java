@@ -5,6 +5,7 @@ import com.practice.employeeservice.dto.EmployeeDto;
 import com.practice.employeeservice.dto.EmployeeResponse;
 import com.practice.employeeservice.entity.Employee;
 import com.practice.employeeservice.exception.ResourceNotFoundException;
+import com.practice.employeeservice.mapper.EmployeeMapper;
 import com.practice.employeeservice.repository.EmployeeRepository;
 import com.practice.employeeservice.service.ApiClient;
 import com.practice.employeeservice.service.EmployeeService;
@@ -37,9 +38,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public EmployeeDto saveEmployee(EmployeeDto employeeDto) {
-		Employee employee = modelMapper.map(employeeDto,Employee.class);
+		//Employee employee = modelMapper.map(employeeDto,Employee.class);
+		Employee employee = EmployeeMapper.mapToEmployee(employeeDto);
 		Employee saveEmployee = employeeRepository.save(employee);
-		EmployeeDto savedEmployeeDto = modelMapper.map(saveEmployee,EmployeeDto.class);
+		//EmployeeDto savedEmployeeDto = modelMapper.map(saveEmployee,EmployeeDto.class);
+		EmployeeDto savedEmployeeDto = EmployeeMapper.mapToEmployeeDto(employee);
 		return  savedEmployeeDto;
 	}
 
@@ -52,23 +55,26 @@ public class EmployeeServiceImpl implements EmployeeService {
 		Employee employee = employeeRepository.findById(employeeId).orElseThrow(()->
 			new ResourceNotFoundException("EmployeeId Not Found")
 		);
-//		ResponseEntity<DepartmentDto>  departmentDtoResponseEntity =restTemplate.getForEntity(
-//				"http://localhost:8080/api/departments/" + employee.getDepartmentCode(), DepartmentDto.class);
+		// Rest Template
+		// ResponseEntity<DepartmentDto>  departmentDtoResponseEntity =restTemplate.getForEntity(
+		//		"http://localhost:8080/api/departments/" + employee.getDepartmentCode(), DepartmentDto.class);
 		// 	DepartmentDto departmentDto = departmentDtoResponseEntity.getBody();
 
-//		DepartmentDto departmentDto = webClient
-//				.get()
-//				.uri("http://localhost:8080/api/departments/"+employee.getDepartmentCode())
-//				.retrieve()
-//				.bodyToMono(DepartmentDto.class)
-//				.block();
+		// Web Client
+		//		DepartmentDto departmentDto = webClient
+		//				.get()
+		//				.uri("http://localhost:8080/api/departments/"+employee.getDepartmentCode())
+		//				.retrieve()
+		//				.bodyToMono(DepartmentDto.class)
+		//				.block();
 
 		DepartmentDto departmentDto  = apiClient
 				.getDepartmentByCode(employee.getDepartmentCode())
 				.getBody();
 
 		EmployeeResponse employeeResponse = new EmployeeResponse();
-		EmployeeDto employeeDto = modelMapper.map(employee,EmployeeDto.class);
+		//EmployeeDto employeeDto = modelMapper.map(employee,EmployeeDto.class);
+		EmployeeDto employeeDto = EmployeeMapper.mapToEmployeeDto(employee);
 		employeeResponse.setEmployee(employeeDto);
 		employeeResponse.setDepartment(departmentDto);
 		return employeeResponse;
@@ -88,7 +94,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 		departmentDto.setDepatmentDescription("Research");
 
 		EmployeeResponse employeeResponse = new EmployeeResponse();
-		EmployeeDto employeeDto = modelMapper.map(employee,EmployeeDto.class);
+		//EmployeeDto employeeDto = modelMapper.map(employee,EmployeeDto.class);
+		EmployeeDto employeeDto = EmployeeMapper.mapToEmployeeDto(employee);
 		employeeResponse.setEmployee(employeeDto);
 		employeeResponse.setDepartment(departmentDto);
 		return employeeResponse;

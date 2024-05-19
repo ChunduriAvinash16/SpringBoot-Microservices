@@ -3,6 +3,7 @@ package com.practice.departmentservice.service.impl;
 import com.practice.departmentservice.dto.DepartmentDto;
 import com.practice.departmentservice.entity.Department;
 import com.practice.departmentservice.exception.ResourceNotFoundException;
+import com.practice.departmentservice.mapper.DepartmentMapper;
 import com.practice.departmentservice.repository.DepartmentRepository;
 import com.practice.departmentservice.service.DeparmentService;
 import lombok.AllArgsConstructor;
@@ -21,9 +22,11 @@ public class DepartmentServiceImpl implements DeparmentService {
 	@Override
 	public DepartmentDto saveDepartment(DepartmentDto deparmentDto) {
 		//Converting DeparmentDto to Department JPA Entity
-		Department department = modelMapper.map(deparmentDto,Department.class);
+		//Department department = modelMapper.map(deparmentDto,Department.class);
+		Department department = DepartmentMapper.mapToDepartment(deparmentDto);
 		Department savedDepartment =  departmentRepository.save(department);
-		DepartmentDto savedDepartmentDto = modelMapper.map(savedDepartment, DepartmentDto.class);
+		//DepartmentDto savedDepartmentDto = modelMapper.map(savedDepartment, DepartmentDto.class);
+		DepartmentDto savedDepartmentDto = DepartmentMapper.mapToDepartmentDto(savedDepartment);
 		return savedDepartmentDto;
 	}
 
@@ -32,7 +35,8 @@ public class DepartmentServiceImpl implements DeparmentService {
 
 		Department department = departmentRepository.findByDepartmentCode(departmentCode)
 				.orElseThrow(() -> new ResourceNotFoundException("Department Code Not Exists"));
-		DepartmentDto departmentDto = modelMapper.map(department, DepartmentDto.class);
+		//DepartmentDto departmentDto = modelMapper.map(department, DepartmentDto.class);
+		DepartmentDto departmentDto = DepartmentMapper.mapToDepartmentDto(department);
 		return departmentDto;
 	}
 }
