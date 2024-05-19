@@ -17,8 +17,41 @@ management:
   tracing:
     sampling:
       probability: 1.0
+  #Actuator EndPoints for CircuitBreaker
+  health:
+    circuit-breakers:
+      enabled: true
+  endpoints:
+    web.exposure.include: health
+  endpoint:
+    health:
+      show-details: always
 logging:
   pattern:
     level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
   level:
     org.springframework.web : DEBUG
+
+#Resilience 4j properties
+resilience4j:
+  circuitbreaker:
+    instances:
+      employee-service:
+        registerHealthIndicator: true
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 5s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
+
+  #Retry
+  retry:
+    instances:
+      employee-service:
+        registerHealthIndicator: true
+        maxAttempts: 5
+        waitDuration: 1s
+
+
