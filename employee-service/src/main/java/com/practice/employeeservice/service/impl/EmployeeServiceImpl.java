@@ -3,6 +3,7 @@ package com.practice.employeeservice.service.impl;
 import com.practice.employeeservice.dto.DepartmentDto;
 import com.practice.employeeservice.dto.EmployeeDto;
 import com.practice.employeeservice.dto.EmployeeResponse;
+import com.practice.employeeservice.dto.OrganizationDto;
 import com.practice.employeeservice.entity.Employee;
 import com.practice.employeeservice.exception.ResourceNotFoundException;
 import com.practice.employeeservice.mapper.EmployeeMapper;
@@ -33,7 +34,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	ModelMapper modelMapper;
 
 //	RestTemplate restTemplate;
-//	WebClient webClient;
+	WebClient webClient;
 	ApiClient apiClient;
 
 	@Override
@@ -72,11 +73,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 				.getDepartmentByCode(employee.getDepartmentCode())
 				.getBody();
 
+		OrganizationDto organizationDto = webClient.get()
+				.uri("http://localhost:8085/api/organizations/"+employee.getOrganizationCode())
+				.retrieve()
+				.bodyToMono(OrganizationDto.class)
+				.block();
+
 		EmployeeResponse employeeResponse = new EmployeeResponse();
 		//EmployeeDto employeeDto = modelMapper.map(employee,EmployeeDto.class);
 		EmployeeDto employeeDto = EmployeeMapper.mapToEmployeeDto(employee);
 		employeeResponse.setEmployee(employeeDto);
 		employeeResponse.setDepartment(departmentDto);
+		employeeResponse.setOrganization(organizationDto);
 		return employeeResponse;
 	}
 
