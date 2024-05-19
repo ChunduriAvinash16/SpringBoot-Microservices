@@ -30,6 +30,15 @@ spring:
           - > 
             Path=
             /api/organizations/**
+        globalCors:
+          cors-configurations:
+            '[/**]':
+               allowedOrigins: "*"
+               allowedMethods:
+                - GET
+                - POST
+                - PUT
+                - DELETE
 management:
   tracing:
     sampling:
